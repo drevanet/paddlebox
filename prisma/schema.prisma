@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String?
+  email        String        @unique
+  passwordHash String
+  createdAt    DateTime      @default(now())
+  subscription Subscription?
+  projects     Project[]
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paddleCustomerId     String?
+  paddleSubscriptionId String?   @unique
+  priceId              String?
+  status               String    @default("inactive")
+  planKey              String?
+  downloadCount        Int       @default(0)
+  periodEnd            DateTime?
+  updatedAt            DateTime  @updatedAt
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String   @default("Untitled box")
+  faces     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
