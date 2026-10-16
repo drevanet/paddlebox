@@ -88,6 +88,7 @@ function BoxModel({
       canvas.height = 512;
 
       const ctx = canvas.getContext('2d')!;
+
       ctx.fillStyle =
         index === 4
           ? '#eeeaff'
@@ -101,7 +102,11 @@ function BoxModel({
 
       if (imageTexture?.image) {
         const image = imageTexture.image as HTMLImageElement;
-        const scale = Math.max(512 / image.width, 512 / image.height);
+        const scale = Math.max(
+          512 / image.width,
+          512 / image.height,
+        );
+
         const width = image.width * scale;
         const height = image.height * scale;
 
@@ -116,8 +121,11 @@ function BoxModel({
         ctx.fillStyle = '#17172b';
         ctx.textAlign = 'center';
         ctx.font = 'bold 38px Arial';
+
         ctx.fillText(
-          (faces[index] || defaults[index]).toUpperCase().slice(0, 22),
+          (faces[index] || defaults[index])
+            .toUpperCase()
+            .slice(0, 22),
           256,
           245,
         );
@@ -192,9 +200,18 @@ export default function BoxScene({
         camera={{ position: [4, 3.2, 4.5], fov: 42 }}
         shadows
         dpr={[1, 2]}
+        gl={{
+          antialias: true,
+          preserveDrawingBuffer: true,
+        }}
+        onCreated={({ gl }) => {
+          gl.domElement.id = 'paddlebox-canvas';
+        }}
       >
         <color attach="background" args={['#f3f1ff']} />
+
         <ambientLight intensity={1.4} />
+
         <directionalLight
           position={[4, 6, 5]}
           intensity={2.3}

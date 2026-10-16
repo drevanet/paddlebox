@@ -17,7 +17,14 @@ import {
 } from 'lucide-react';
 import BoxScene from '@/components/box-scene';
 
-const faceNames = ['Front', 'Back', 'Left', 'Right', 'Top', 'Bottom'];
+const faceNames = [
+  'Front',
+  'Back',
+  'Left',
+  'Right',
+  'Top',
+  'Bottom',
+];
 
 const initialFaces = [
   'YOUR BRAND',
@@ -29,6 +36,7 @@ const initialFaces = [
 ];
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
 const ALLOWED_IMAGE_TYPES = [
   'image/png',
   'image/jpeg',
@@ -39,12 +47,16 @@ export default function Editor() {
   const { data: session, status } = useSession();
 
   const [faces, setFaces] = useState<string[]>(initialFaces);
-  const [faceImages, setFaceImages] = useState<(string | null)[]>(
-    Array(6).fill(null)
-  );
+
+  const [faceImages, setFaceImages] = useState<
+    (string | null)[]
+  >(Array(6).fill(null));
+
   const [active, setActive] = useState(0);
   const [accent, setAccent] = useState('#7557f6');
-  const [projectName, setProjectName] = useState('My first box');
+  const [projectName, setProjectName] =
+    useState('My first box');
+
   const [account, setAccount] = useState<any>(null);
   const [message, setMessage] = useState('');
 
@@ -92,7 +104,8 @@ export default function Editor() {
   const plan = account?.subscription?.planKey;
   const count = account?.subscription?.downloadCount || 0;
 
-  const allowance = plan === 'two_weeks' ? Infinity : 50;
+  const allowance =
+    plan === 'two_weeks' ? Infinity : 50;
 
   const downloadsLeft =
     allowance === Infinity
@@ -115,13 +128,17 @@ export default function Editor() {
     if (!file) return;
 
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      setMessage('Please choose a PNG, JPG, or WebP image.');
+      setMessage(
+        'Please choose a PNG, JPG, or WebP image.'
+      );
       event.target.value = '';
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
-      setMessage('Images must be 5 MB or smaller.');
+      setMessage(
+        'Images must be 5 MB or smaller.'
+      );
       event.target.value = '';
       return;
     }
@@ -130,7 +147,9 @@ export default function Editor() {
 
     reader.onload = () => {
       if (typeof reader.result !== 'string') {
-        setMessage('Could not read the selected image.');
+        setMessage(
+          'Could not read the selected image.'
+        );
         return;
       }
 
@@ -142,16 +161,20 @@ export default function Editor() {
         )
       );
 
-      setMessage(`Image added to the ${faceNames[active]} face.`);
+      setMessage(
+        `Image added to the ${faceNames[active]} face.`
+      );
     };
 
     reader.onerror = () => {
-      setMessage('Could not read that image. Please try another.');
+      setMessage(
+        'Could not read that image. Please try another.'
+      );
     };
 
     reader.readAsDataURL(file);
 
-    // Allows selecting the same file again after replacing/removing it.
+    // Allows selecting the same file again.
     event.target.value = '';
   }
 
@@ -162,7 +185,9 @@ export default function Editor() {
       )
     );
 
-    setMessage(`Image removed from the ${faceNames[active]} face.`);
+    setMessage(
+      `Image removed from the ${faceNames[active]} face.`
+    );
   }
 
   function resetDesign() {
@@ -175,8 +200,15 @@ export default function Editor() {
   }
 
   async function download() {
+    if (status === 'loading') {
+      setMessage('Please wait while your account loads.');
+      return;
+    }
+
     if (!session) {
-      setMessage('Please sign in to download your box.');
+      setMessage(
+        'Please sign in to download your box.'
+      );
       return;
     }
 
@@ -187,51 +219,62 @@ export default function Editor() {
       return;
     }
 
-    if (allowance !== Infinity && count >= allowance) {
+    if (
+      allowance !== Infinity &&
+      count >= allowance
+    ) {
       setMessage(
         'You have used your 50 downloads for this subscription period. Upgrade or manage your plan to continue.'
       );
       return;
     }
 
-    const payload = {
-      projectName,
-      faces,
-      faceImages,
-      accent,
-      createdAt: new Date().toISOString(),
-      note: 'Betty box design export',
-    };
+    const canvas = document.getElementById(
+      'paddlebox-canvas'
+    ) as HTMLCanvasElement | null;
 
-    const blob = new Blob(
-      [JSON.stringify(payload, null, 2)],
-      { type: 'application/json' }
-    );
+    if (!canvas) {
+      setMessage(
+        'The 3D preview is not ready. Please wait for it to load and try again.'
+      );
+      return;
+    }
 
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
+    try {
+      const pngData = canvas.toDataURL('image/png');
 
-    anchor.href = url;
-    anchor.download = `${
-      projectName.trim().replace(/[^a-z0-9]+/gi, '-').toLowerCase() ||
-      'betty-box'
-    }.json`;
+      const safeName =
+        projectName
+          .trim()
+          .replace(/[^a-z0-9]+/gi, '-')
+          .replace(/^-+|-+$/g, '')
+          .toLowerCase() || 'betty-box';
 
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
+      const anchor = document.createElement('a');
 
-    // Give the browser time to start the download before revoking the URL.
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      anchor.href = pngData;
+      anchor.download = `${safeName}.png`;
 
-    setMessage(
-      'Design settings and face images downloaded as JSON. This is not yet a PNG or print-ready packaging export.'
-    );
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+
+      setMessage(
+        'Your box preview has been downloaded as a PNG image.'
+      );
+    } catch (error) {
+      console.error('PNG export failed:', error);
+
+      setMessage(
+        'Could not export the PNG. Check whether any image texture blocks export, then try again.'
+      );
+    }
   }
 
   return (
     <main className="min-h-[70vh] bg-[#f6f5fb]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        {/* Page heading */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <div className="eyebrow">
@@ -244,19 +287,26 @@ export default function Editor() {
             </h1>
 
             <p className="mt-2 text-slate-600">
-              Edit six faces, upload artwork, and watch your packaging
-              concept take shape.
+              Edit six faces, upload artwork, and watch your
+              packaging concept take shape.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Link href="/pricing" className="btn-secondary">
+            <Link
+              href="/pricing"
+              className="btn-secondary"
+            >
               View plans
             </Link>
 
-            <button onClick={download} className="btn-primary">
+            <button
+              type="button"
+              onClick={download}
+              className="btn-primary"
+            >
               <Download size={17} />
-              Download design
+              Download design (PNG)
             </button>
           </div>
         </div>
@@ -321,7 +371,8 @@ export default function Editor() {
               </h2>
 
               <p className="mt-1 text-sm leading-6 text-slate-500">
-                Select a side to edit its text or attach an image.
+                Select a side to edit its text or attach an
+                image.
               </p>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
@@ -366,9 +417,13 @@ export default function Editor() {
                 {faces[active].length}/22 characters
               </p>
 
+              {/* Face image upload */}
               <div className="mt-5 border-t border-slate-100 pt-5">
                 <div className="flex items-center gap-2">
-                  <ImagePlus size={18} className="text-violet" />
+                  <ImagePlus
+                    size={18}
+                    className="text-violet"
+                  />
 
                   <label
                     htmlFor="face-image-upload"
@@ -427,6 +482,7 @@ export default function Editor() {
                 )}
               </div>
 
+              {/* Accent color */}
               <label className="mt-5 block text-sm font-bold">
                 Brand accent color
               </label>
@@ -470,7 +526,10 @@ export default function Editor() {
             {/* Subscription status */}
             <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex items-center gap-2">
-                <LockKeyhole size={18} className="text-violet" />
+                <LockKeyhole
+                  size={18}
+                  className="text-violet"
+                />
 
                 <h2 className="font-extrabold">
                   Subscription status
@@ -509,7 +568,9 @@ export default function Editor() {
                           : 'bg-amber-50 text-amber-700'
                       }`}
                     >
-                      {subscribed ? 'Active' : 'Not subscribed'}
+                      {subscribed
+                        ? 'Active'
+                        : 'Not subscribed'}
                     </span>
                   </div>
 
@@ -559,8 +620,12 @@ export default function Editor() {
             <div className="flex-1">
               {message}
 
-              {message.toLowerCase().includes('subscription') ||
-              message.toLowerCase().includes('subscribe') ? (
+              {message.toLowerCase().includes(
+                'subscription'
+              ) ||
+              message.toLowerCase().includes(
+                'subscribe'
+              ) ? (
                 <div>
                   <Link
                     className="mt-1 inline-block font-extrabold text-violet underline"
@@ -584,12 +649,12 @@ export default function Editor() {
         )}
 
         <p className="mt-5 text-xs leading-5 text-slate-400">
-          Images are currently held in browser memory and included in
-          JSON downloads. They are not permanently saved to your
-          account, and the JSON download is not a print-ready package
-          export. Persistent project storage, production image export,
-          and server-side download enforcement are still required
-          before launch.
+          PNG downloads contain the visible 3D preview, not a
+          print-ready packaging dieline. Images are currently held
+          in browser memory and are not permanently saved to your
+          account. Download allowance checks in this page are
+          client-side; enforce download limits on the server before
+          production.
         </p>
       </div>
     </main>
