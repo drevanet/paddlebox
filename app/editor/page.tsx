@@ -47,16 +47,12 @@ export default function Editor() {
   const { data: session, status } = useSession();
 
   const [faces, setFaces] = useState<string[]>(initialFaces);
-
-  const [faceImages, setFaceImages] = useState<
-    (string | null)[]
-  >(Array(6).fill(null));
-
+  const [faceImages, setFaceImages] = useState<(string | null)[]>(
+    Array(6).fill(null)
+  );
   const [active, setActive] = useState(0);
   const [accent, setAccent] = useState('#7557f6');
-  const [projectName, setProjectName] =
-    useState('My first box');
-
+  const [projectName, setProjectName] = useState('My first box');
   const [account, setAccount] = useState<any>(null);
   const [message, setMessage] = useState('');
 
@@ -103,9 +99,7 @@ export default function Editor() {
 
   const plan = account?.subscription?.planKey;
   const count = account?.subscription?.downloadCount || 0;
-
-  const allowance =
-    plan === 'two_weeks' ? Infinity : 50;
+  const allowance = plan === 'two_weeks' ? Infinity : 50;
 
   const downloadsLeft =
     allowance === Infinity
@@ -128,28 +122,23 @@ export default function Editor() {
     if (!file) return;
 
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      setMessage(
-        'Please choose a PNG, JPG, or WebP image.'
-      );
+      setMessage('Please choose a PNG, JPG, or WebP image.');
       event.target.value = '';
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
-      setMessage(
-        'Images must be 5 MB or smaller.'
-      );
+      setMessage('Images must be 5 MB or smaller.');
       event.target.value = '';
       return;
     }
 
     const reader = new FileReader();
+    const targetFace = active;
 
     reader.onload = () => {
       if (typeof reader.result !== 'string') {
-        setMessage(
-          'Could not read the selected image.'
-        );
+        setMessage('Could not read the selected image.');
         return;
       }
 
@@ -157,24 +146,20 @@ export default function Editor() {
 
       setFaceImages((previous) =>
         previous.map((image, index) =>
-          index === active ? imageData : image
+          index === targetFace ? imageData : image
         )
       );
 
       setMessage(
-        `Image added to the ${faceNames[active]} face.`
+        `Image added to the ${faceNames[targetFace]} face.`
       );
     };
 
     reader.onerror = () => {
-      setMessage(
-        'Could not read that image. Please try another.'
-      );
+      setMessage('Could not read that image. Please try another.');
     };
 
     reader.readAsDataURL(file);
-
-    // Allows selecting the same file again.
     event.target.value = '';
   }
 
@@ -206,9 +191,7 @@ export default function Editor() {
     }
 
     if (!session) {
-      setMessage(
-        'Please sign in to download your box.'
-      );
+      setMessage('Please sign in to download your box.');
       return;
     }
 
@@ -219,10 +202,7 @@ export default function Editor() {
       return;
     }
 
-    if (
-      allowance !== Infinity &&
-      count >= allowance
-    ) {
+    if (allowance !== Infinity && count >= allowance) {
       setMessage(
         'You have used your 50 downloads for this subscription period. Upgrade or manage your plan to continue.'
       );
@@ -230,7 +210,7 @@ export default function Editor() {
     }
 
     const canvas = document.getElementById(
-      'paddlebox-canvas'
+      'drevabox-canvas'
     ) as HTMLCanvasElement | null;
 
     if (!canvas) {
@@ -248,7 +228,7 @@ export default function Editor() {
           .trim()
           .replace(/[^a-z0-9]+/gi, '-')
           .replace(/^-+|-+$/g, '')
-          .toLowerCase() || 'betty-box';
+          .toLowerCase() || 'drevabox-design';
 
       const anchor = document.createElement('a');
 
@@ -260,7 +240,7 @@ export default function Editor() {
       anchor.remove();
 
       setMessage(
-        'Your box preview has been downloaded as a PNG image.'
+        'Your Drevabox preview has been downloaded as a PNG image.'
       );
     } catch (error) {
       console.error('PNG export failed:', error);
@@ -279,7 +259,7 @@ export default function Editor() {
           <div>
             <div className="eyebrow">
               <Sparkles size={14} />
-              BETTY DESIGN STUDIO
+              DREVABOX DESIGN STUDIO
             </div>
 
             <h1 className="mt-3 text-3xl font-black tracking-tight">
@@ -293,10 +273,7 @@ export default function Editor() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Link
-              href="/pricing"
-              className="btn-secondary"
-            >
+            <Link href="/pricing" className="btn-secondary">
               View plans
             </Link>
 
@@ -371,8 +348,7 @@ export default function Editor() {
               </h2>
 
               <p className="mt-1 text-sm leading-6 text-slate-500">
-                Select a side to edit its text or attach an
-                image.
+                Select a side to edit its text or attach an image.
               </p>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
@@ -420,10 +396,7 @@ export default function Editor() {
               {/* Face image upload */}
               <div className="mt-5 border-t border-slate-100 pt-5">
                 <div className="flex items-center gap-2">
-                  <ImagePlus
-                    size={18}
-                    className="text-violet"
-                  />
+                  <ImagePlus size={18} className="text-violet" />
 
                   <label
                     htmlFor="face-image-upload"
@@ -526,10 +499,7 @@ export default function Editor() {
             {/* Subscription status */}
             <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex items-center gap-2">
-                <LockKeyhole
-                  size={18}
-                  className="text-violet"
-                />
+                <LockKeyhole size={18} className="text-violet" />
 
                 <h2 className="font-extrabold">
                   Subscription status
@@ -568,9 +538,7 @@ export default function Editor() {
                           : 'bg-amber-50 text-amber-700'
                       }`}
                     >
-                      {subscribed
-                        ? 'Active'
-                        : 'Not subscribed'}
+                      {subscribed ? 'Active' : 'Not subscribed'}
                     </span>
                   </div>
 
@@ -620,12 +588,8 @@ export default function Editor() {
             <div className="flex-1">
               {message}
 
-              {message.toLowerCase().includes(
-                'subscription'
-              ) ||
-              message.toLowerCase().includes(
-                'subscribe'
-              ) ? (
+              {message.toLowerCase().includes('subscription') ||
+              message.toLowerCase().includes('subscribe') ? (
                 <div>
                   <Link
                     className="mt-1 inline-block font-extrabold text-violet underline"

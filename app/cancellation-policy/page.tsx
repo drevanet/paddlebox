@@ -1,8 +1,33 @@
+
 import PolicyPage from '@/components/policy-page';
-export default function CancellationPolicy(){return <PolicyPage title="Cancellation Policy" intro="You can manage your Betty subscription and review its renewal details through the subscription management portal, when your account is linked to Paddle." sections={[
-{heading:'Recurring billing',body:'The two-week plan is intended to renew every two weeks and the monthly plan is intended to renew monthly. The final billing interval, price, taxes and renewal date are the ones shown in Paddle checkout and your receipt.'},
-{heading:'How to cancel',body:'Sign in, open Subscription Management from your account, and use the Paddle customer portal to cancel if the option is available. If the portal is unavailable, contact support with your account email and subscription reference. Do not share payment card details.'},
-{heading:'When cancellation takes effect',body:'Unless checkout or applicable law states otherwise, cancellation stops future renewals and access remains available until the end of the current paid period. Cancellation does not automatically refund a prior payment; see our Refund Policy and any mandatory rights that apply.'},
-{heading:'Confirmation',body:'Check the portal or any confirmation message from Paddle to confirm the subscription status and end date. Keep the confirmation for your records.'},
-{heading:'Consumer rights',body:'This policy does not remove any mandatory cancellation rights under applicable law. Make sure the actual plan renewal behavior configured in Paddle matches these statements before launch.'}
-]}/>}
+
+export default function CancellationPolicy() {
+  return (
+    <PolicyPage
+      title="Cancellation Policy"
+      intro="You can manage your Drevabox subscription and review its renewal details through the subscription management portal, when your account is linked to Paddle."
+      sections={[
+        {
+          heading: 'Recurring billing',
+          body: 'The two-week plan is intended to renew every two weeks and the monthly plan is intended to renew monthly. The final billing interval, price, taxes and renewal date are the ones shown in Paddle checkout and your receipt.',
+        },
+        {
+          heading: 'How to cancel',
+          body: 'Sign in to your Drevabox account, open Subscription Management, and use the Paddle customer portal to cancel if the option is available. If the portal is unavailable, contact Drevabox support with your account email and subscription reference. Do not share payment card details.',
+        },
+        {
+          heading: 'When cancellation takes effect',
+          body: 'Unless checkout or applicable law states otherwise, cancellation stops future renewals and access remains available until the end of the current paid period. Cancellation does not automatically refund a prior payment; see our Refund Policy and any mandatory rights that apply.',
+        },
+        {
+          heading: 'Confirmation',
+          body: 'Check the portal or any confirmation message from Paddle to confirm the subscription status and end date. Keep the confirmation for your records.',
+        },
+        {
+          heading: 'Consumer rights',
+          body: 'This policy does not remove any mandatory cancellation rights under applicable law. Make sure the actual plan renewal behavior configured in Paddle matches these statements before launch.',
+        },
+      ]}
+    />
+  );
+}

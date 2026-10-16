@@ -21,7 +21,7 @@ import {
 import BoxScene from "@/components/box-scene";
 
 const sample = [
-  "BETTY STUDIO",
+  "DREVABOX",
   "MADE TO UNBOX",
   "SIDE A",
   "SIDE B",
@@ -48,7 +48,7 @@ const features = [
   {
     icon: LayoutTemplate,
     title: "Start with a clear canvas",
-    desc: "No intimidating design suite. Open the editor, name your faces and develop your concept at your own pace.",
+    desc: "No intimidating design suite. Open Drevabox, name your faces and develop your concept at your own pace.",
   },
   {
     icon: Download,
@@ -125,13 +125,16 @@ export default function Home() {
 
             <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[1.04] tracking-[-.055em] sm:text-6xl lg:text-7xl">
               Packaging design that{" "}
-              <span className="text-violet">comes to life.</span>
+              <span className="text-violet">
+                comes to life.
+              </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Meet Betty, your friendly 3D box maker. Customize all six faces,
-              spin your design in real time, and turn your next big idea into a
-              box worth opening.
+              Meet Drevabox, your friendly 3D box maker.
+              Customize all six faces, spin your design in real
+              time, and turn your next big idea into a box worth
+              opening.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -165,15 +168,18 @@ export default function Home() {
 
             <div className="mt-10 flex items-center gap-3">
               <div className="flex -space-x-2">
-                {["#f9c9b6", "#c5d7ff", "#c8f2d9", "#f7d7ff"].map(
-                  (color) => (
-                    <span
-                      key={color}
-                      className="h-9 w-9 rounded-full border-2 border-white"
-                      style={{ background: color }}
-                    />
-                  )
-                )}
+                {[
+                  "#f9c9b6",
+                  "#c5d7ff",
+                  "#c8f2d9",
+                  "#f7d7ff",
+                ].map((color) => (
+                  <span
+                    key={color}
+                    className="h-9 w-9 rounded-full border-2 border-white"
+                    style={{ background: color }}
+                  />
+                ))}
               </div>
 
               <div>
@@ -223,7 +229,9 @@ export default function Home() {
 
             <div className="absolute -left-5 top-24 hidden rounded-2xl border border-white bg-white p-4 shadow-soft sm:block">
               <Palette className="text-violet" />
-              <p className="mt-2 text-sm font-extrabold">Your colors</p>
+              <p className="mt-2 text-sm font-extrabold">
+                Your colors
+              </p>
               <p className="text-xs text-slate-500">
                 Your brand, your way
               </p>
@@ -231,7 +239,9 @@ export default function Home() {
 
             <div className="absolute -right-4 bottom-14 hidden rounded-2xl border border-white bg-white p-4 shadow-soft sm:block">
               <PackageCheck className="text-emerald-600" />
-              <p className="mt-2 text-sm font-extrabold">Ready to export</p>
+              <p className="mt-2 text-sm font-extrabold">
+                Ready to export
+              </p>
               <p className="text-xs text-slate-500">
                 When you're happy
               </p>
@@ -250,7 +260,9 @@ export default function Home() {
             ["1", "Simple workspace"],
           ].map(([number, label]) => (
             <div key={label}>
-              <p className="text-2xl font-black text-violet">{number}</p>
+              <p className="text-2xl font-black text-violet">
+                {number}
+              </p>
               <p className="mt-1 text-sm font-semibold text-slate-500">
                 {label}
               </p>
@@ -276,8 +288,8 @@ export default function Home() {
             </h2>
 
             <p className="mt-5 leading-7 text-slate-600">
-              From first sketch to polished concept, Betty keeps the creative
-              process clear, tactile and fun.
+              From first sketch to polished concept, Drevabox
+              keeps the creative process clear, intuitive and fun.
             </p>
           </div>
 
@@ -291,9 +303,13 @@ export default function Home() {
                   <Icon size={23} />
                 </div>
 
-                <h3 className="mt-5 text-xl font-extrabold">{title}</h3>
+                <h3 className="mt-5 text-xl font-extrabold">
+                  {title}
+                </h3>
 
-                <p className="mt-3 leading-7 text-slate-600">{desc}</p>
+                <p className="mt-3 leading-7 text-slate-600">
+                  {desc}
+                </p>
               </article>
             ))}
           </div>
@@ -314,12 +330,15 @@ export default function Home() {
 
             <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">
               From blank canvas to{" "}
-              <span className="text-mint">box-worthy.</span>
+              <span className="text-mint">
+                box-worthy.
+              </span>
             </h2>
 
             <p className="mt-5 max-w-xl leading-8 text-slate-300">
-              A great concept doesn't need a complicated process. Betty makes
-              it easy to explore ideas before you commit to a final direction.
+              A great concept doesn't need a complicated process.
+              Drevabox makes it easy to explore ideas before you
+              commit to a final direction.
             </p>
 
             <div className="mt-8 grid gap-6">
@@ -330,7 +349,9 @@ export default function Home() {
                   </span>
 
                   <div>
-                    <h3 className="font-extrabold">{step.title}</h3>
+                    <h3 className="font-extrabold">
+                      {step.title}
+                    </h3>
                     <p className="mt-1 text-sm leading-6 text-slate-400">
                       {step.description}
                     </p>
@@ -347,14 +368,23 @@ export default function Home() {
 
           <div className="rounded-[2rem] border border-white/10 bg-white/5 p-3">
             <BoxScene
-              faces={["MAKE IT", "MEMORABLE", "YOUR", "BRAND", "THE BIG", "REVEAL"]}
+              faces={[
+                "MAKE IT",
+                "MEMORABLE",
+                "YOUR",
+                "BRAND",
+                "THE BIG",
+                "REVEAL",
+              ]}
               accent="#7557f6"
               className="h-[420px] overflow-hidden rounded-[1.5rem]"
             />
 
             <div className="flex items-center justify-between px-3 py-4">
               <div>
-                <p className="font-bold">Your concept, in motion</p>
+                <p className="font-bold">
+                  Your concept, in motion
+                </p>
                 <p className="mt-1 text-sm text-slate-400">
                   Interactive 3D box preview
                 </p>
@@ -384,8 +414,9 @@ export default function Home() {
             </div>
 
             <p className="max-w-md leading-7 text-slate-600">
-              Product packaging, subscription boxes, gift concepts or a fun
-              personal project — give your idea a shape you can actually see.
+              Product packaging, subscription boxes, gift
+              concepts or a fun personal project — give your idea
+              a shape you can actually see.
             </p>
           </div>
 
@@ -426,8 +457,8 @@ export default function Home() {
               </h2>
 
               <p className="mt-3 max-w-xl leading-7 text-white/80">
-                Create your account, open the studio and start shaping your
-                box.
+                Create your account, open the studio and start
+                shaping your box.
               </p>
             </div>
 
