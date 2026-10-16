@@ -5,7 +5,7 @@ export default function Privacy() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro={`This policy explains how Betty Box Maker ("Betty", "we", "us") collects, uses and protects information when you use our website, account and 3D box design tools.`}
+      intro={`This policy explains how Dreva Box Maker ("Dreva", "we", "us") collects, uses and protects information when you use our website, account and 3D box design tools.`}
       sections={[
         {
           heading: 'Information we collect',
