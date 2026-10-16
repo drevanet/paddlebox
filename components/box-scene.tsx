@@ -1,7 +1,7 @@
 'use client';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Environment } from '@react-three/drei';
-import { useMemo } from 'react';
+import { createElement, useMemo } from 'react';
 import * as THREE from 'three';
 const defaults=['FRONT','BACK','LEFT','RIGHT','TOP','BOTTOM'];
 function BoxModel({faces,accent}:{faces:string[];accent:string}){
@@ -15,6 +15,23 @@ function BoxModel({faces,accent}:{faces:string[];accent:string}){
   const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
   return new THREE.MeshStandardMaterial({map:texture,roughness:.72,metalness:.02});
  }),[faces,accent]);
- return <mesh castShadow receiveShadow rotation={[.1,.55,0]}><boxGeometry args={[2.3,2.3,2.3]}/>{materials.map((m,i)=><primitive key={i} attach={`material-${i}`} object={m}/>)}</mesh>
+ const mesh=useMemo(()=>{
+  const object=new THREE.Mesh(new THREE.BoxGeometry(2.3,2.3,2.3),materials);
+  object.castShadow=true;
+  object.receiveShadow=true;
+  object.rotation.set(.1,.55,0);
+  return object;
+ },[materials]);
+ return createElement('primitive' as any, { object: mesh });
 }
-export default function BoxScene({faces,accent='#7557f6',className=''}:{faces:string[];accent?:string;className?:string}){return <div className={className}><Canvas camera={{position:[4,3.2,4.5],fov:42}} shadows dpr={[1,2]}><color attach="background" args={['#f3f1ff']}/><ambientLight intensity={1.4}/><directionalLight position={[4,6,5]} intensity={2.3} castShadow/><Environment preset="studio"/><BoxModel faces={faces} accent={accent}/><ContactShadows position={[0,-1.45,0]} opacity={.22} scale={7} blur={2.5}/><OrbitControls enablePan={false} minDistance={3.5} maxDistance={8} autoRotate autoRotateSpeed={.55}/></Canvas></div>}
+export default function BoxScene({faces,accent='#7557f6',className=''}:{faces:string[];accent?:string;className?:string}){
+ return createElement('div',{className},createElement(Canvas,{camera:{position:[4,3.2,4.5],fov:42},shadows:true,dpr:[1,2]},
+  createElement('color' as any,{attach:'background',args:['#f3f1ff']}),
+  createElement('ambientLight' as any,{intensity:1.4}),
+  createElement('directionalLight' as any,{position:[4,6,5],intensity:2.3,castShadow:true}),
+  createElement(Environment,{preset:'studio'}),
+  createElement(BoxModel,{faces,accent}),
+  createElement(ContactShadows,{position:[0,-1.45,0],opacity:.22,scale:7,blur:2.5}),
+  createElement(OrbitControls,{enablePan:false,minDistance:3.5,maxDistance:8,autoRotate:true,autoRotateSpeed:.55})
+ ));
+}
